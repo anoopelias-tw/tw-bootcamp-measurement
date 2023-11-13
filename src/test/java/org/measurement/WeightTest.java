@@ -2,8 +2,7 @@ package org.measurement;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.measurement.Weight.*;
 
 public class WeightTest {
@@ -41,14 +40,14 @@ public class WeightTest {
     @Test
     public void test1000GramsPlus1000GramsEquals2000Grams() {
         Weight weight = gram(1000);
-        Weight result = (Weight) weight.add(gram(1000));
-        assertEquals(gram(2000), result);
+        Weight result = weight.add(gram(1000));
+        assertTrue(result.exactlyEquals(gram(2000)));
     }
 
     @Test
     public void test1KilogramPlus300GramsEqualsTo1p3Kilograms() {
         Weight weight = kilogram(1);
-        Weight result = (Weight) weight.add(gram(300));
-        assertEquals(kilogram(1.3), result);
+        Weight result = weight.add(gram(300));
+        assertTrue(result.exactlyEquals(kilogram(1.3)));
     }
 }

@@ -1,6 +1,6 @@
 package org.measurement;
 
-public class Weight extends Measurement {
+public class Weight extends Measurement<Weight> {
 
     public static Weight milligram(double value) {
         return new Weight(value, MILLIGRAM);
@@ -28,11 +28,7 @@ public class Weight extends Measurement {
         super(value, unit);
     }
 
-    @Override
-    public Measurement add(Measurement weight) {
-        if (getClass() != weight.getClass()) throw new RuntimeException("Operating on two different classes");
-        double result = this.toLowestUnit() + weight.toLowestUnit();
-        WeightUnit unit = (WeightUnit) this.unit;
-        return new Weight(unit.fromLowestUnit(result), unit);
+    public Weight create(double value) {
+        return new Weight(value, (WeightUnit) this.unit);
     }
 }

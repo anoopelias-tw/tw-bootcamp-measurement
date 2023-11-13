@@ -2,7 +2,7 @@ package org.measurement;
 
 import java.util.Objects;
 
-public abstract class Measurement {
+public abstract class Measurement<T extends Measurement<?>> {
     private final double value;
     protected final Unit unit;
 
@@ -12,11 +12,18 @@ public abstract class Measurement {
         public Unit(int conversionFactor) {
             this.conversionFactor = conversionFactor;
         }
-        public double toLowestUnit(double value) {
+        public double toDefaultUnit(double value) {
             return value * conversionFactor;
         }
-        public double fromLowestUnit(double value) {
+        public double fromDefaultUnit(double value) {
             return value / conversionFactor;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            Unit unit = (Unit) o;
+            return conversionFactor == unit.conversionFactor;
         }
     }
 
@@ -28,7 +35,7 @@ public abstract class Measurement {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Measurement measurement = (Measurement) o;
+        Measurement<T> measurement = (Measurement<T>) o;
         return this.toLowestUnit() == measurement.toLowestUnit() ;
     }
 
@@ -37,13 +44,18 @@ public abstract class Measurement {
         return Objects.hash(this.toLowestUnit());
     }
 
-    public abstract Measurement add(Measurement other);
+    public abstract T create(double value);
 
-    protected double toLowestUnit() {
-        return this.unit.toLowestUnit(this.value);
+    public T add(T other) {
+        double result = this.toLowestUnit() + other.toLowestUnit();
+        return this.create(this.unit.fromDefaultUnit(result));
     }
 
-    public boolean exactlyEquals(Measurement other) {
+    protected double toLowestUnit() {
+        return this.unit.toDefaultUnit(this.value);
+    }
+
+    public boolean exactlyEquals(Measurement<T> other) {
         return this.value == other.value && this.unit.equals(other.unit);
     }
 }

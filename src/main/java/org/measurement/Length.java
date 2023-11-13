@@ -2,7 +2,7 @@ package org.measurement;
 
 import java.util.Objects;
 
-public class Length extends Measurement {
+public class Length extends Measurement<Length> {
 
     public static Length centimeter(double value) {
         return new Length(value, CENTIMETER);
@@ -30,11 +30,7 @@ public class Length extends Measurement {
         super(value, unit);
     }
 
-    @Override
-    public Measurement add(Measurement length) {
-        if (getClass() != length.getClass()) throw new RuntimeException("Operating on two different classes");
-        double result = this.toLowestUnit() + length.toLowestUnit();
-        LengthUnit unit = (LengthUnit) this.unit;
-        return new Length(unit.fromLowestUnit(result), unit);
+    public Length create(double value) {
+        return new Length(value, (LengthUnit) this.unit);
     }
 }
