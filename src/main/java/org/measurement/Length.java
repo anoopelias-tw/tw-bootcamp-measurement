@@ -6,9 +6,6 @@ public class Length {
 
     private final int value;
 
-    private final Unit unit;
-
-
     public enum Unit {
         METER,
         KILOMETER,
@@ -24,19 +21,18 @@ public class Length {
     }
 
     public Length(int value, Unit unit) {
-        this.value = value;
-        this.unit = unit;
+        this.value = unit.toCentimeters(value);
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Length length = (Length) o;
-        return this.unit.toCentimeters(this.value) == length.unit.toCentimeters(length.value);
+        return this.value == length.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.unit.toCentimeters(this.value));
+        return Objects.hash(this.value);
     }
 }
