@@ -107,4 +107,29 @@ public class LengthTest {
         Length length = new Length(200000, Length.Unit.CENTIMETER);
         assertEquals(new Length(2, Length.Unit.KILOMETER), length);
     }
+
+    @Test
+    public void test1000MetersPlus1000MetersEquals2000Meters() {
+        Length lhs = new Length(1000, Length.Unit.METER);
+        Length rhs = new Length(1000, Length.Unit.METER);
+        Length result = lhs.add(rhs);
+        assertTrue(result.exactlyEquals(new Length(2000, Length.Unit.METER)));
+        assertFalse(result.exactlyEquals(new Length(1000, Length.Unit.METER)));
+    }
+
+    @Test
+    public void test1KilometerPlus300MeterEquals1p3Kilometer() {
+        Length lhs = new Length(1, Length.Unit.KILOMETER);
+        Length rhs = new Length(300, Length.Unit.METER);
+        Length result = lhs.add(rhs);
+        assertTrue(new Length(1.3, Length.Unit.KILOMETER).exactlyEquals(result));
+    }
+
+    @Test
+    public void test500MetersPlus1KilometerEquals1500Meters() {
+        Length lhs = new Length(500, Length.Unit.METER);
+        Length rhs = new Length(1, Length.Unit.KILOMETER);
+        Length result = lhs.add(rhs);
+        assertTrue(new Length(1500, Length.Unit.METER).exactlyEquals(result));
+    }
 }

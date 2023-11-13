@@ -4,35 +4,59 @@ import java.util.Objects;
 
 public class Length {
 
-    private final int value;
+    private final double value;
+
+    private final Unit unit;
+
+    public Length add(Length length) {
+        double result = this.unit.toCentimeters(this.value) + length.unit.toCentimeters(length.value);
+        return new Length(this.unit.fromCentimeters(result), this.unit);
+    }
+
+    public boolean exactlyEquals(Length length) {
+        return this.value == length.value && this.unit == length.unit;
+    }
 
     public enum Unit {
         METER,
         KILOMETER,
         CENTIMETER;
 
-        private int toCentimeters(int value) {
-            return value * switch (this) {
+        private int conversionFactor() {
+            return switch (this) {
                 case KILOMETER -> 100000;
                 case METER -> 100;
                 case CENTIMETER -> 1;
             };
         }
+
+        private double toCentimeters(double value) {
+            return value * this.conversionFactor();
+        }
+
+        private double fromCentimeters(double value) {
+            return value / this.conversionFactor();
+        }
     }
 
-    public Length(int value, Unit unit) {
-        this.value = unit.toCentimeters(value);
+    public Length(double value, Unit unit) {
+        this.value = value;
+        this.unit = unit;
+    }
+
+    private double toCentimeters() {
+        return this.unit.toCentimeters(this.value);
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Length length = (Length) o;
-        return this.value == length.value;
+        return this.toCentimeters() == length.toCentimeters();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.value);
+        return Objects.hash(this.toCentimeters());
     }
 }
