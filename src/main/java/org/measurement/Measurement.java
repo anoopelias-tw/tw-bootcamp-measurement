@@ -7,16 +7,26 @@ public abstract class Measurement<T extends Measurement<?>> {
     protected final Unit unit;
 
     public static class Unit {
-        private final int conversionFactor;
+        private final double conversionFactor;
 
-        public Unit(int conversionFactor) {
+        private final double offset;
+
+        public Unit(double conversionFactor) {
             this.conversionFactor = conversionFactor;
+            this.offset = 0;
         }
+
+        public Unit(double conversionFactor, double offset) {
+            this.conversionFactor = conversionFactor;
+            this.offset = offset;
+        }
+
         public double toDefaultUnit(double value) {
-            return value * conversionFactor;
+            return offset + (value * conversionFactor);
         }
+
         public double fromDefaultUnit(double value) {
-            return value / conversionFactor;
+            return (value - offset) / conversionFactor;
         }
 
         @Override
@@ -36,22 +46,22 @@ public abstract class Measurement<T extends Measurement<?>> {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Measurement<T> measurement = (Measurement<T>) o;
-        return this.toLowestUnit() == measurement.toLowestUnit() ;
+        return Math.abs(this.toDefaultUnit() - measurement.toDefaultUnit()) <= 0.00005;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.toLowestUnit());
+        return Objects.hash(this.toDefaultUnit());
     }
 
     public abstract T create(double value);
 
     public T add(T other) {
-        double result = this.toLowestUnit() + other.toLowestUnit();
+        double result = this.toDefaultUnit() + other.toDefaultUnit();
         return this.create(this.unit.fromDefaultUnit(result));
     }
 
-    protected double toLowestUnit() {
+    protected double toDefaultUnit() {
         return this.unit.toDefaultUnit(this.value);
     }
 
