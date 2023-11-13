@@ -17,7 +17,19 @@ public class Length {
         return this.value == length.value && this.unit == length.unit;
     }
 
-    public enum Unit {
+    public static Length centimeter(double value) {
+        return new Length(value, Unit.CENTIMETER);
+    }
+
+    public static Length meter(double value) {
+        return new Length(value, Unit.METER);
+    }
+
+    public static Length kilometer(double value) {
+        return new Length(value, Unit.KILOMETER);
+    }
+
+    private enum Unit {
         METER,
         KILOMETER,
         CENTIMETER;
