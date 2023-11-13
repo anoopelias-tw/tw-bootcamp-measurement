@@ -1,5 +1,7 @@
 package org.measurement;
 
+import java.util.Objects;
+
 public class Length {
 
     private final int value;
@@ -19,7 +21,15 @@ public class Length {
         }
     }
 
-    public boolean equals(Length length) {
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Length length = (Length) o;
         return this.toMeters() == length.toMeters();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.toMeters());
     }
 }
