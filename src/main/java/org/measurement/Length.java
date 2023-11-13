@@ -16,7 +16,7 @@ public class Length extends Measurement<Length> {
         return new Length(value, KILOMETER);
     }
 
-    private static class LengthUnit extends Measurement.Unit {
+    private static class LengthUnit extends Unit {
         private LengthUnit(int conversionFactor) {
             super(conversionFactor);
         }

@@ -14,7 +14,7 @@ public class Weight extends Measurement<Weight> {
         return new Weight(value, KILOGRAM);
     }
 
-    private static class WeightUnit extends Measurement.Unit {
+    private static class WeightUnit extends Unit {
         private WeightUnit(int conversionFactor) {
             super(conversionFactor);
         }
